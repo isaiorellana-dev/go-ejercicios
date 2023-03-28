@@ -37,31 +37,25 @@ var hijos = []hijo{
 
 func repartir(hijoName string, cantidad float32) {
 	var hijoIndex int
-	var hijosQueSePortaronBien []hijo
-	var hijosQueSePortaronMal []hijo
+	var hijosPortaronBien []hijo
+	var hijosPortaronMal []hijo
 
 	for i, value := range hijos {
 		if value.nombre == hijoName {
 			hijoIndex = i
 		}
-	}
-
-	for i, value := range hijos {
 		if value.sePortoBien && value.nombre != hijoName {
-			hijosQueSePortaronBien = append(hijosQueSePortaronBien, hijos[i])
+			hijosPortaronBien = append(hijosPortaronBien, value)
 		}
-	}
-
-	for i, value := range hijos {
 		if !value.sePortoBien {
-			hijosQueSePortaronMal = append(hijosQueSePortaronMal, hijos[i])
+			hijosPortaronMal = append(hijosPortaronMal, value)
 		}
 	}
 
 	var dineroDeLosQueSePortaronBien float32
 
-	for _, value := range hijosQueSePortaronBien {
-		dineroDeLosQueSePortaronBien = dineroDeLosQueSePortaronBien + value.mesada
+	for _, value := range hijosPortaronBien {
+		dineroDeLosQueSePortaronBien += value.mesada
 	}
 
 	var dineroParaDarleAlHijo = dinero - dineroDeLosQueSePortaronBien
@@ -69,15 +63,17 @@ func repartir(hijoName string, cantidad float32) {
 	if cantidad <= dineroParaDarleAlHijo {
 		hijos[hijoIndex].mesada = cantidad
 
-		var dineroParaRepartirALosPlebeyos = dinero - dineroDeLosQueSePortaronBien - cantidad
+		var dineroARepartirALosPlebeyos = dinero - dineroDeLosQueSePortaronBien - cantidad
 
 		for i := range hijos {
 			if !hijos[i].sePortoBien {
-				var hijosQueSePortanMalLen = len(hijosQueSePortaronMal)
-				hijos[i].mesada = dineroParaRepartirALosPlebeyos / float32(hijosQueSePortanMalLen)
+				var hijosQueSePortanMalLen = len(hijosPortaronMal)
+				hijos[i].mesada = dineroARepartirALosPlebeyos / float32(hijosQueSePortanMalLen)
 			}
 		}
 		fmt.Println(hijos)
+	} else {
+		fmt.Println("No hay tanta plata")
 	}
 }
 
